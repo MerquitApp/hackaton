@@ -1,6 +1,17 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import GestureGame from "./components/JuegoImagenes";
+import Imagen from "./components/Imagen";
+
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline md:text-5xl">Hello world!</h1>
+    <div>
+      <Router>
+      <Routes>
+        <Route path="/" element={<Imagen />} />
+        <Route path="/juego" element={<GestureGame />} />
+      </Routes>
+    </Router>
+    </div>
   );
 }
 
