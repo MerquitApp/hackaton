@@ -1,41 +1,46 @@
-import { useState } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { useNavigate } from 'react-router-dom';
 
 function ARGameStart() {
-  const [isGameStarted, setIsGameStarted] = useState(false);
+  const navigate = useNavigate();
 
   const startGame = () => {
-    setIsGameStarted(true);
+    navigate('/puzzle');
   };
 
   return (
-    <div style={{ textAlign: 'center', padding: '20px' }}>
-      {!isGameStarted ? (
-        <div>
-          <h1>Juego de Puzzles en Realidad Aumentada</h1>
-          <button onClick={startGame} style={buttonStyle}>
-            Iniciar Juego
-          </button>
-        </div>
-      ) : (
-        <div>
-          <h2>Apunta tu cámara a un marcador AR</h2>
-          <Canvas style={{ width: '100%', height: '400px' }}>
-            <a-scene embedded arjs="sourceType: webcam;">
-              {/* Piezas del puzzle AR */}
-              <a-box position="0 0.5 -1" material="color: red"></a-box>
-              <a-sphere
-                position="1 0.5 -3"
-                radius="0.5"
-                material="color: green"></a-sphere>
-              <a-cylinder
-                position="0 0.5 -3"
-                radius="0.3"
-                material="color: blue"></a-cylinder>
-            </a-scene>
-          </Canvas>
-        </div>
-      )}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        padding: '20px',
+        backgroundImage:
+          'url(https://www.marthadebayle.com/wp-content/uploads/2022/03/850x590-13.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white', // Cambia el color del texto a blanco
+        position: 'relative',
+        textAlign: 'center'
+      }}>
+      {/* Superposición oscura */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 1
+        }}
+      />
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <h1>Rompecabezas de las Sombras Perdidas</h1>
+        <button onClick={startGame} style={buttonStyle}>
+          Iniciar Juego
+        </button>
+      </div>
     </div>
   );
 }
