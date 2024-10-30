@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // Components
-import Menu from './components/Menu';
-import Game from './components/Game';
-import Help from './components/Help';
-import Ranking from './components/Ranking';
-import EndGame from './components/EndGame';
+import Game from '../components/Game';
+import Help from '../components/Help';
+import Ranking from '../components/Ranking';
+import EndGame from '../components/EndGame';
+import Menu from '../components/Menu';
 
 // Constants
 const MAX_TIME = 60 * 60; // 1 hour
@@ -27,7 +27,7 @@ const EscapeRoom = () => {
     // Set interval to decrement time
     const interval = setInterval(() => {
       setState((prevState) => ({ ...prevState, time: prevState.time - 1 }));
-      if (prevState.time === 0) {
+      if (state.time === 0) {
         endGame();
       }
     }, 1000);
@@ -37,10 +37,7 @@ const EscapeRoom = () => {
   }, [state.time]);
 
   const startGame = () => {
-    // Reset game state
     setState(INITIAL_STATE);
-    // Load puzzles and hints
-    // ...
   };
 
   const solvePuzzle = (index) => {
@@ -64,12 +61,9 @@ const EscapeRoom = () => {
 
   return (
     <Router>
-      <Switch>
-        <Route path="/" exact>
-          <Menu startGame={startGame} />
-        </Route>
-        <Route path="/game">
-          {!state.gameEnded ? (
+      <Routes>
+        <Route path="/" exact element={<Menu startGame={startGame} />} />
+        <Route path="/game" element={!state.gameEnded ? (
             <Game
               puzzles={state.puzzles}
               hints={state.hints}
@@ -79,15 +73,10 @@ const EscapeRoom = () => {
             />
           ) : (
             <EndGame score={state.score} />
-          )}
-        </Route>
-        <Route path="/help">
-          <Help />
-        </Route>
-        <Route path="/ranking">
-          <Ranking />
-        </Route>
-      </Switch>
+          )} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/ranking" element={<Ranking />} />
+      </Routes>
     </Router>
   );
 };
