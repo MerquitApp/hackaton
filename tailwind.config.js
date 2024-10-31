@@ -8,6 +8,10 @@ export default {
         nosifer: ['Nosifer', 'cursive'],
         unifraktur: ['UnifrakturMaguntia', 'cursive'],
       },
+      backgroundImage: {
+        'hero-pattern': "url('./media/background-image.webp')",
+        'footer-texture': "url('./media/background-image.webp')",
+      }
     }
   },
   plugins: []
