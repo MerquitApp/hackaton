@@ -2,13 +2,16 @@ import {
   GestureRecognizer,
   FilesetResolver
 } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { GESTURES } from '../constants';
-import { validateGestures } from '../helpers/validateGestures';
+import { isValidGesture } from '../helpers/isValidGesture';
+import { areAllValidGestures } from '../helpers/areAllValidGestures';
+import { Modal } from './Modal';
 
 export const HandsGame = () => {
   const webcamRef = useRef(null);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   useEffect(() => {
     const video = webcamRef.current;
@@ -65,8 +68,6 @@ export const HandsGame = () => {
     let lastVideoTime = -1;
     let results = undefined;
     async function predictWebcam() {
-      console.log('predict');
-
       // Now let's start detecting the stream.
       if (runningMode === 'IMAGE') {
         runningMode = 'VIDEO';
@@ -80,40 +81,55 @@ export const HandsGame = () => {
 
       if (results.gestures.length > 0) {
         const categoryName = results.gestures[0][0].categoryName;
-        const categoryScore = parseFloat(
-          results.gestures[0][0].score * 100
-        ).toFixed(2);
         const handedness = results.handednesses[0][0].displayName;
 
-        switch (categoryName) {
-          case GESTURES.ClosedFist:
-            gesturesList.push(GESTURES.ClosedFist);
-            break;
-          case GESTURES.ILoveU:
-            gesturesList.push(GESTURES.ILoveU);
-            break;
-          case GESTURES.OpenPalm:
-            gesturesList.push(GESTURES.OpenPalm);
-            break;
-          case GESTURES.PointingUp:
-            gesturesList.push(GESTURES.PointingUp);
-            break;
-          case GESTURES.ThumbUp:
-            gesturesList.push(GESTURES.ThumbUp);
-            break;
+        if (
+          gesturesList[gesturesList.length - 1]?.split(':')[
+            gesturesList.length - 1
+          ] !== handedness
+        ) {
+          switch (categoryName) {
+            case GESTURES.ClosedFist:
+              gesturesList.push(
+                `${handedness.toLowerCase()}:${GESTURES.ClosedFist}`
+              );
+              break;
+            case GESTURES.ILoveU:
+              gesturesList.push(
+                `${handedness.toLowerCase()}:${GESTURES.ILoveU}`
+              );
+              break;
+            case GESTURES.OpenPalm:
+              gesturesList.push(
+                `${handedness.toLowerCase()}:${GESTURES.OpenPalm}`
+              );
+              break;
+            case GESTURES.PointingUp:
+              gesturesList.push(
+                `${handedness.toLowerCase()}:${GESTURES.PointingUp}`
+              );
+              break;
+            case GESTURES.ThumbUp:
+              gesturesList.push(
+                `${handedness.toLowerCase()}:${GESTURES.ThumbUp}`
+              );
+              break;
+          }
+
+          const currIndex = gesturesList.length - 1;
+          const isValid = isValidGesture(gesturesList[currIndex], currIndex);
+          const areAllValid = areAllValidGestures(gesturesList);
+          if (!isValid) {
+            // Remove last gesture
+            gesturesList.pop();
+          }
+
+          if (areAllValid) {
+            console.log('Valid gestures');
+            setIsCorrect(true);
+          }
+          console.log(gesturesList);
         }
-
-        const areGesturesValid = validateGestures(gesturesList);
-
-        if (areGesturesValid) {
-          console.log('Valid gestures');
-        } else {
-          gesturesList = [];
-        }
-
-        console.log(
-          `GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`
-        );
       }
 
       if (webcamRunning) {
@@ -123,6 +139,14 @@ export const HandsGame = () => {
   }, []);
 
   return (
-    <video ref={webcamRef} className="w-screen h-screen" autoPlay playsInline />
+    <>
+      <video
+        ref={webcamRef}
+        className="w-screen h-screen"
+        autoPlay
+        playsInline
+      />
+      {isCorrect && <Modal isOpen>Correct</Modal>}
+    </>
   );
 };
