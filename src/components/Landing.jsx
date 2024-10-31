@@ -8,7 +8,11 @@ export const Landing = () => {
     <div className="h-screen bg-[url('img/Fondo.png')] bg-cover bg-center bg-no-repeat">
       <Header />
       <Descripcion />
-      <Boton />
+      <div className="flex gap-4 justify-center">
+        <Boton url="/patron">Patron</Boton>
+        <Boton url="/gestos">Gestos</Boton>
+        <Boton url="/puzzle">Puzzle</Boton>
+      </div>
     </div>
   );
 };

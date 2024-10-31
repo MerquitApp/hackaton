@@ -8,6 +8,7 @@ import { GESTURES } from '../constants';
 import { isValidGesture } from '../helpers/isValidGesture';
 import { areAllValidGestures } from '../helpers/areAllValidGestures';
 import { Modal } from './Modal';
+import Boton from './Boton';
 
 export const HandsGame = () => {
   const webcamRef = useRef(null);
@@ -146,7 +147,17 @@ export const HandsGame = () => {
         autoPlay
         playsInline
       />
-      {isCorrect && <Modal isOpen>Correct</Modal>}
+      {isCorrect && (
+        <Modal isOpen>
+          <div className="p-4">
+            <h2 className="text-white">Enhorabuena!</h2>
+            <p className="text-white">
+              ¡Has completado el juego correctamente!
+            </p>
+            <Boton url="/">Volver al inicio</Boton>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

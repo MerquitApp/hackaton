@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from '../components/Modal';
 import isRightOrder from '../helpers/isRightOrder';
+import Boton from './Boton';
 
 let hasLoaded = false;
 
@@ -175,7 +176,17 @@ const PuzzleGame = () => {
           ref={confettiRef}
           particle-system="preset: confetti; enabled: false; particleCount: 1000; color: #FA4B3C, #FF9F1C, #FDFF00, #0FFF50, #00AFFF, #6A4BFF, #FC00FF, #FF0D00; velocityValue: 3;"></a-entity>
       </a-scene>
-      {isCorrect && <Modal isOpen>Correct</Modal>}
+      {isCorrect && (
+        <Modal isOpen>
+          <div className="p-4">
+            <h2 className="text-white">Enhorabuena!</h2>
+            <p className="text-white">
+              ¡Has completado el juego correctamente!
+            </p>
+            <Boton url="/">Volver al inicio</Boton>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

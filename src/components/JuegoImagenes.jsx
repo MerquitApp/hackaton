@@ -1,10 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import isRightOrder from '../helpers/isRightOrder';
+import { Modal } from './Modal';
+import Boton from './Boton';
 
 let hasLoaded = false;
 
-const GestureGame = () => {
+const JuegoImagenes = () => {
   const confettiRef = useRef(null);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   // Referencias a los marcadores
   const firstMarkerRef = useRef(null);
@@ -33,61 +36,85 @@ const GestureGame = () => {
 
         if (isValidOrder) {
           confettiRef.current.components['particle-system'].startParticles();
+          setIsCorrect(true);
         }
       }
     });
   }, []);
 
   return (
-    <a-scene arjs="matrixCodeType: 3x3; detectionMode: mono_and_matrix;" scene>
-      {/* Markers and Entities */}
-      <a-marker type="barcode" value="0" ref={firstMarkerRef} id="first-marker">
-        <a-entity position="0 0 0" scale="1">
-          <a-entity
-            position="0 0 0"
-            scale="1"
-            gltf-model="/GLTF/character_witch.gltf"></a-entity>
-        </a-entity>
-      </a-marker>
-      <a-marker
-        type="barcode"
-        value="1"
-        ref={secondMarkerRef}
-        id="second-marker">
-        <a-entity position="0 0 0" scale="1">
-          <a-entity
-            position="0 0 0"
-            scale="1"
-            gltf-model="/GLTF/candleSmall.gltf.glb"></a-entity>
-        </a-entity>
-      </a-marker>
-      <a-marker type="barcode" value="2" ref={thirdMarkerRef} id="third-marker">
-        <a-entity position="0 0 0" scale="1">
-          <a-entity
-            position="0 0 0"
-            scale="1"
-            gltf-model="/GLTF/candyA.gltf.glb"></a-entity>
-        </a-entity>
-      </a-marker>
-      <a-marker
-        type="barcode"
-        value="3"
-        ref={fourthMarkerRef}
-        id="fourth-marker">
-        <a-entity position="0 0 0" scale="1">
-          <a-entity
-            position="0 0 0"
-            scale="1"
-            gltf-model="/GLTF/cauldron.gltf.glb"></a-entity>
-        </a-entity>
-      </a-marker>
-      <a-entity
-        ref={confettiRef}
-        position="0 2.25 -15"
-        particle-system="color: #EF0000,#44CC00; particleCount: 1000; enabled: false; duration: 2"></a-entity>
-      <a-entity camera look-controls position="0 0 0"></a-entity>
-    </a-scene>
+    <>
+      <a-scene
+        arjs="matrixCodeType: 3x3; detectionMode: mono_and_matrix;"
+        scene>
+        {/* Markers and Entities */}
+        <a-marker
+          type="barcode"
+          value="0"
+          ref={firstMarkerRef}
+          id="first-marker">
+          <a-entity position="0 0 0" scale="1">
+            <a-entity
+              position="0 0 0"
+              scale="1"
+              gltf-model="/GLTF/character_witch.gltf"></a-entity>
+          </a-entity>
+        </a-marker>
+        <a-marker
+          type="barcode"
+          value="1"
+          ref={secondMarkerRef}
+          id="second-marker">
+          <a-entity position="0 0 0" scale="1">
+            <a-entity
+              position="0 0 0"
+              scale="1"
+              gltf-model="/GLTF/candleSmall.gltf.glb"></a-entity>
+          </a-entity>
+        </a-marker>
+        <a-marker
+          type="barcode"
+          value="2"
+          ref={thirdMarkerRef}
+          id="third-marker">
+          <a-entity position="0 0 0" scale="1">
+            <a-entity
+              position="0 0 0"
+              scale="1"
+              gltf-model="/GLTF/candyA.gltf.glb"></a-entity>
+          </a-entity>
+        </a-marker>
+        <a-marker
+          type="barcode"
+          value="3"
+          ref={fourthMarkerRef}
+          id="fourth-marker">
+          <a-entity position="0 0 0" scale="1">
+            <a-entity
+              position="0 0 0"
+              scale="1"
+              gltf-model="/GLTF/cauldron.gltf.glb"></a-entity>
+          </a-entity>
+        </a-marker>
+        <a-entity
+          ref={confettiRef}
+          position="0 2.25 -15"
+          particle-system="color: #EF0000,#44CC00; particleCount: 1000; enabled: false; duration: 2"></a-entity>
+        <a-entity camera look-controls position="0 0 0"></a-entity>
+      </a-scene>
+      {isCorrect && (
+        <Modal isOpen>
+          <div className="p-4">
+            <h2 className="text-white">Enhorabuena!</h2>
+            <p className="text-white">
+              ¡Has completado el juego correctamente!
+            </p>
+            <Boton url="/">Volver al inicio</Boton>
+          </div>
+        </Modal>
+      )}
+    </>
   );
 };
 
-export default GestureGame;
+export default JuegoImagenes;
