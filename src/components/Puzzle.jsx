@@ -1,33 +1,54 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import isRightOrder from '../helpers/isRightOrder';
+import Modal from '../components/Modal';
 
 let hasLoaded = false;
 
 // Componente principal que maneja el puzzle de orden
 const PuzzleGame = () => {
+  const [isCorrect, setIsCorrect] = useState(false);
   const confettiRef = useRef(null); // Referencia al efecto de confeti
-  const textRef = useRef(null); // Referencia al texto de estado
+  const markerRef1 = useRef(null);
+  const markerRef2 = useRef(null);
+  const markerRef3 = useRef(null);
+  const markerRef4 = useRef(null);
+  const markerRef5 = useRef(null);
+  const markerRef6 = useRef(null);
+  const markerRef7 = useRef(null);
+  const markerRef8 = useRef(null);
+  const markerRef9 = useRef(null);
 
   // useEffect para llamar a checkOrder solo al montar el componente
   useEffect(() => {
     if (hasLoaded) return;
     hasLoaded = true;
 
-    const markers = [];
-
-    for (let j = 0; j < 8; j++) {
-      const row = [];
-      if (j === 8 || (j % 3 === 0 && j !== 0)) {
-        markers.push(row);
-      } else {
-        row.push(document.querySelector(`#marker-${j}`));
-      }
-    }
-
-    console.log(markers);
-
     // eslint-disable-next-line no-undef
     AFRAME.registerComponent('scene', {
-      tick: () => {}
+      tick: () => {
+        const markers = [
+          [markerRef1.current, markerRef2.current, markerRef3.current],
+          [markerRef4.current, markerRef5.current, markerRef6.current],
+          [markerRef7.current, markerRef8.current, markerRef9.current]
+        ];
+
+        const areRowsValid = markers.every(
+          (row) =>
+            !isRightOrder(...row.map((el) => el.object3D.position.x)) &&
+            row.some((el) => el.object3D.position.x !== 0)
+        );
+
+        const isFirstColumnValid = !isRightOrder(
+          markers[0][0].object3D.position.y,
+          markers[1][0].object3D.position.y,
+          markers[2][0].object3D.position.y
+        );
+
+        if (areRowsValid && isFirstColumnValid) {
+          confettiRef.current.components['particle-system'].startParticles();
+          setIsCorrect(true);
+        }
+      }
     });
   }, []);
 
@@ -35,9 +56,14 @@ const PuzzleGame = () => {
   return (
     <div>
       {/* Escena de AR con marcadores que representan las piezas del puzzle */}
-      <a-scene arjs="matrixCodeType: 3x3; detectionMode: mono_and_matrix;">
+      <a-scene
+        arjs="matrixCodeType: 3x3; detectionMode: mono_and_matrix;"
+        scene>
         {/* Generamos los marcadores para cada pieza del puzzle */}
-        <a-marker type="pattern" url={`/pattern-pumpkin1.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin1.patt`}
+          ref={markerRef1}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -46,7 +72,10 @@ const PuzzleGame = () => {
               gltf-model="/candleBundle.gltf.glb"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin2.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin2.patt`}
+          ref={markerRef2}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -55,16 +84,22 @@ const PuzzleGame = () => {
               gltf-model="/candyA.gltf.glb"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin3.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin3.patt`}
+          ref={markerRef3}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
               position="0 0 0"
               scale="1"
-              gltf-model="/character_jack.gltf.glb"></a-entity>
+              gltf-model="/character_jack.gltf"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin4.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin4.patt`}
+          ref={markerRef4}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -73,7 +108,10 @@ const PuzzleGame = () => {
               gltf-model="/lampPost.gltf.glb"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin5.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin5.patt`}
+          ref={markerRef5}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -82,7 +120,10 @@ const PuzzleGame = () => {
               gltf-model="/lollipopB.gltf.glb"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin6.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin6.patt`}
+          ref={markerRef6}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -91,7 +132,10 @@ const PuzzleGame = () => {
               gltf-model="/shrine.gltf.glb"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin7.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin7.patt`}
+          ref={markerRef7}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -100,7 +144,10 @@ const PuzzleGame = () => {
               gltf-model="/treeA_graveyard.gltf.glb"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin8.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin8.patt`}
+          ref={markerRef8}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -109,7 +156,10 @@ const PuzzleGame = () => {
               gltf-model="/character_witch.gltf"></a-entity>
           </a-entity>
         </a-marker>
-        <a-marker type="pattern" url={`/pattern-pumpkin9.patt`}>
+        <a-marker
+          type="pattern"
+          url={`/pattern-pumpkin9.patt`}
+          ref={markerRef9}>
           <a-entity position="0 0 0" scale="1">
             {/* Render de cada pieza del puzzle */}
             <a-entity
@@ -120,19 +170,12 @@ const PuzzleGame = () => {
         </a-marker>
         {/* Cámara AR para interacción en la escena */}
         <a-entity camera look-controls position="0 0 0"></a-entity>
+        {/* Efecto de confeti en caso de éxito */}
+        <a-entity
+          ref={confettiRef}
+          particle-system="preset: confetti; enabled: false; particleCount: 1000; color: #FA4B3C, #FF9F1C, #FDFF00, #0FFF50, #00AFFF, #6A4BFF, #FC00FF, #FF0D00; velocityValue: 3;"></a-entity>
       </a-scene>
-
-      {/* Mensaje que muestra el estado del puzzle */}
-      <span
-        ref={textRef}
-        className="text-white bg-black p-1 text-2xl absolute bottom-0 left-0">
-        Tu tarea es arrastrar y unir los pedazos para formar la imagen original
-      </span>
-
-      {/* Efecto de confeti en caso de éxito */}
-      <a-entity
-        ref={confettiRef}
-        particle-system="preset: confetti; enabled: false; particleCount: 1000; color: #FA4B3C, #FF9F1C, #FDFF00, #0FFF50, #00AFFF, #6A4BFF, #FC00FF, #FF0D00; velocityValue: 3;"></a-entity>
+      {isCorrect && <Modal isOpen>Correct</Modal>}
     </div>
   );
 };
