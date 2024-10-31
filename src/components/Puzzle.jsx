@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { Modal } from '../components/Modal';
 import isRightOrder from '../helpers/isRightOrder';
-import Modal from '../components/Modal';
 
 let hasLoaded = false;
 
