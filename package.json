@@ -11,6 +11,9 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@fontsource/creepster": "^5.1.0",
+    "@fontsource/nosifer": "^5.1.0",
+    "@fontsource/unifrakturmaguntia": "^5.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0"
